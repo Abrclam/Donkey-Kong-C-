@@ -20,12 +20,23 @@ player::player() {//constructor
 }
 
 void player::moveLeft() { xVel--; }
-void player::climb() { xPos--; cout << "climbin!"; }
+
+
+void player::climb() { 
+	if (OnLadder) {
+		yVel--;
+		cout << "climbin!";
+	}
+}
+
+
 void player::moveRight() { xVel++;  }
+
 void player::Jump() {
-	if (CanJump)
-		yVel -=12;
-	//cout << "we do be jumping tho ";
+	if (CanJump && !OnLadder) {
+		yVel -= 12;
+		cout << "we do be jumping tho ";
+	}
 }
 
 void player::draw() {
@@ -33,6 +44,9 @@ void player::draw() {
 }
 
 void player::move(vector<gameObject*>stuff) {
+	cout << "flag 0: onladder is " << OnLadder << endl;
+	//cout << "onladder is "<<OnLadder;
+	//cout << "canjump is " << CanJump << endl;
 	//deal with platform collision
 	vector<gameObject*>::iterator iter;
 	int x;
@@ -65,14 +79,21 @@ void player::move(vector<gameObject*>stuff) {
 				//yVel = -1.0;
 				//isOnGround = true;
 				OnLadder = true;
-				cout << "I'm jus vibin on tha ladder." << endl;
+				//cout << "I'm jus vibin on tha ladder." << endl;
+				cout << "flag 1: onladder is " << OnLadder << endl;
+				CanJump = false;
+				break;
+			}
+			else {
+				OnLadder = false; //added by mo
+				cout << "set onladder to false!" << endl << endl << endl;
 			}
 	
-			
+			cout << "flag 2: onladder is " << OnLadder << endl;
 		}
 	}
 
-
+	cout << "flag 3: onladder is " << OnLadder << endl;
 	//update player position by adding velocity
 	xPos += xVel;
 	yPos += yVel;
@@ -105,6 +126,8 @@ void player::move(vector<gameObject*>stuff) {
 		xPos = 0;
 	if (xPos + 32 > SCREEN_W)
 		xPos = SCREEN_W - 32;
+
+	cout << "flag 4: onladder is " << OnLadder << endl;
 }
 
 //collision function that differs based on how close your feet are to the ground that lets you walk up stairs
